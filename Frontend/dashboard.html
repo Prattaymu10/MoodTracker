@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { darkMode: "class" };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  </head>
+
+  <body class="bg-gray-900 text-white min-h-screen px-4 pt-6 pb-10">
+    <div class="max-w-4xl mx-auto space-y-8">
+      <!-- Header -->
+      <div
+        class="flex justify-between items-center bg-gray-800 p-4 rounded-2xl shadow mb-4"
+      >
+        <div id="currentDate" class="text-sm text-gray-400"></div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs">🌙</span>
+          <button
+            id="toggleDark"
+            class="relative inline-flex items-center h-6 w-11 rounded-full bg-gray-600 transition"
+          >
+            <span
+              id="toggleKnob"
+              class="inline-block w-4 h-4 transform bg-white rounded-full transition translate-x-6"
+            ></span>
+          </button>
+          <span class="text-xs text-gray-400">🌞</span>
+        </div>
+      </div>
+
+      <!-- Mood Entry -->
+      <div class="bg-gray-800 p-6 rounded-2xl shadow">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold">Daily Mood Tracker</h2>
+          <a
+            href="login.html"
+            class="text-blue-400 hover:underline font-medium"
+            onclick="logout()"
+            >Sign out</a
+          >
+        </div>
+
+        <div
+          id="dailyCounter"
+          class="mb-4 p-3 rounded-md bg-blue-900 text-blue-200 text-sm"
+        >
+          <span id="counterText">Loading daily count...</span>
+        </div>
+
+        <label class="block mb-2 font-medium">Mood</label>
+        <select
+          id="mood"
+          class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white mb-4"
+        >
+          <option value="-5">😡 Furious (-5)</option>
+          <option value="-4">😩 Exhausted (-4)</option>
+          <option value="-3">😭 Overwhelmed (-3)</option>
+          <option value="-2">😔 Disappointed (-2)</option>
+          <option value="-1">😬 Anxious (-1)</option>
+          <option value="0">😐 Neutral (0)</option>
+          <option value="1">😂 Amused (+1)</option>
+          <option value="2">😄 Joyful (+2)</option>
+          <option value="3">😎 Confident (+3)</option>
+          <option value="4">🤩 Inspired (+4)</option>
+          <option value="5">🤗 Ecstatic (+5)</option>
+        </select>
+
+        <label class="block mb-2 font-medium">Note</label>
+        <textarea
+          id="note"
+          class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white mb-4"
+          rows="4"
+          placeholder="Write about your day..."
+        ></textarea>
+
+        <button
+          id="saveMoodBtn"
+          onclick="saveMood()"
+          class="w-full py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Save
+        </button>
+
+        <div
+          id="tipBox"
+          class="mt-4 p-3 rounded-md text-sm bg-blue-900 text-blue-200"
+        >
+          💡 <strong>Tip of the Day:</strong> Loading tip...
+        </div>
+      </div>
+
+      <!-- Mood Chart & Table -->
+      <div class="bg-gray-800 p-6 rounded-2xl shadow">
+        <h2 class="text-2xl font-bold mb-4">7-Day Mood Overview</h2>
+        <div class="mb-4 text-sm text-gray-400">
+          Shows your average daily mood over the past week
+        </div>
+
+        <!-- Chart Container -->
+        <div class="relative h-64 mb-6">
+          <canvas id="moodChart" class="absolute inset-0"></canvas>
+        </div>
+
+        <h3 class="font-semibold mb-2">Recent Entries (Last 10)</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead>
+              <tr class="text-gray-400 border-b border-gray-700">
+                <th class="pb-2">Date & Time</th>
+                <th class="pb-2">Mood</th>
+                <th class="pb-2">Note</th>
+              </tr>
+            </thead>
+            <tbody id="moodTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let moodChart = null;
+
+      // Dark mode toggle
+      document.getElementById("toggleDark").addEventListener("click", () => {
+        const html = document.documentElement;
+        const knob = document.getElementById("toggleKnob");
+        html.classList.toggle("dark");
+        knob.classList.toggle("translate-x-1");
+        knob.classList.toggle("translate-x-6");
+      });
+
+      // Tip of the day
+      const tips = [
+        "Take a 10-minute break to breathe and stretch.",
+        "Drink a glass of water and hydrate.",
+        "Step outside for fresh air.",
+        "Write down 3 things you're grateful for.",
+        "Move your body — even a short walk counts!",
+        "Organize a small area of your space.",
+        "Listen to a song that lifts your mood.",
+        "Take 5 deep breaths with eyes closed.",
+        "Message a friend or loved one.",
+        "Smile at yourself in the mirror.",
+      ];
+      const randomTip = tips[Math.floor(Math.random() * tips.length)];
+      document.getElementById(
+        "tipBox"
+      ).innerHTML = `💡 <strong>Tip of the Day:</strong> ${randomTip}`;
+
+      // Current date and time
+      function updateDateTime() {
+        const now = new Date();
+        const formattedDate = now.toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+        const formattedTime = now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        document.getElementById(
+          "currentDate"
+        ).textContent = `📅 ${formattedDate} • ${formattedTime}`;
+      }
+      updateDateTime();
+      setInterval(updateDateTime, 60000);
+
+      // Fetch daily count
+      async function fetchDailyCount() {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        try {
+          const res = await fetch(
+            "http://localhost:5000/api/moods/daily-count",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          const data = await res.json();
+          const counterText = document.getElementById("counterText");
+          const saveMoodBtn = document.getElementById("saveMoodBtn");
+
+          if (data.success) {
+            if (data.remaining <= 0) {
+              counterText.innerHTML = `📊 Daily limit reached! You've logged <strong>${data.todayCount}/10</strong> moods today`;
+              counterText.parentElement.className =
+                "mb-4 p-3 rounded-md bg-red-900 text-red-200 text-sm";
+              saveMoodBtn.disabled = true;
+            } else {
+              counterText.innerHTML = `📊 Today's moods: <strong>${data.todayCount}/10</strong> • ${data.remaining} remaining`;
+              counterText.parentElement.className =
+                "mb-4 p-3 rounded-md bg-blue-900 text-blue-200 text-sm";
+              saveMoodBtn.disabled = false;
+            }
+          }
+        } catch (error) {
+          console.error("Failed to fetch daily count:", error);
+        }
+      }
+
+      // Save mood
+      async function saveMood() {
+        const token = localStorage.getItem("token");
+        const moodValue = document.getElementById("mood").value;
+        const note = document.getElementById("note").value;
+        const moodScore = parseInt(moodValue);
+        const moodEmoji = getEmoji(moodScore);
+
+        if (!token) return alert("Not logged in");
+
+        try {
+          const res = await fetch("http://localhost:5000/api/moods", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              mood: moodEmoji,
+              moodScore,
+              note,
+            }),
+          });
+
+          const data = await res.json();
+          if (data.success) {
+            alert(
+              `Mood saved! ${data.remainingToday} entries remaining today.`
+            );
+            document.getElementById("note").value = "";
+            fetchMoods();
+            fetchDailyCount();
+          } else {
+            alert(data.message || "Failed to save mood");
+          }
+        } catch (error) {
+          console.error("Save mood error:", error);
+          alert("Network error. Please try again.");
+        }
+      }
+
+      // Fetch moods
+      async function fetchMoods() {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        try {
+          const res = await fetch("http://localhost:5000/api/moods", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const data = await res.json();
+
+          if (data.success && Array.isArray(data.moods)) {
+            const tableBody = document.getElementById("moodTableBody");
+            tableBody.innerHTML = "";
+
+            data.moods.forEach((entry) => {
+              const date = new Date(entry.date);
+              const formattedDate = date.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              });
+              const formattedTime = date.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+
+              tableBody.innerHTML += `
+                <tr class="border-b border-gray-700/50">
+                  <td class="py-2 text-xs">
+                    <div>${formattedDate}</div>
+                    <div class="text-gray-500">${formattedTime}</div>
+                  </td>
+                  <td class="py-2 text-lg">${getEmoji(entry.moodScore)}</td>
+                  <td class="py-2 text-xs max-w-xs truncate">${
+                    entry.note || "—"
+                  }</td>
+                </tr>
+              `;
+            });
+
+            if (data.chartData) {
+              drawChart(data.chartData.labels, data.chartData.values);
+            }
+          }
+        } catch (error) {
+          console.error("Fetch moods error:", error);
+        }
+      }
+
+      function getEmoji(value) {
+        const map = {
+          "-5": "😡",
+          "-4": "😩",
+          "-3": "😭",
+          "-2": "😔",
+          "-1": "😬",
+          0: "😐",
+          1: "😂",
+          2: "😄",
+          3: "😎",
+          4: "🤩",
+          5: "🤗",
+        };
+        return map[value] || "❓";
+      }
+
+      function drawChart(labels, dataPoints) {
+        const ctx = document.getElementById("moodChart").getContext("2d");
+
+        if (moodChart) {
+          moodChart.destroy();
+        }
+
+        moodChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Average Daily Mood",
+                data: dataPoints,
+                borderColor: "rgb(96, 165, 250)",
+                backgroundColor: "rgba(96, 165, 250, 0.1)",
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: "white",
+                pointBorderColor: "rgb(96, 165, 250)",
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                spanGaps: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: { color: "#ccc" },
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    if (context.parsed.y === null) {
+                      return "No data";
+                    }
+                    return `Average mood: ${context.parsed.y}`;
+                  },
+                },
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                min: -5,
+                max: 5,
+                ticks: {
+                  color: "#ccc",
+                  callback: function (value) {
+                    const emojiMap = {
+                      "-5": "😡 -5",
+                      "-4": "😩 -4",
+                      "-3": "😭 -3",
+                      "-2": "😔 -2",
+                      "-1": "😬 -1",
+                      0: "😐 0",
+                      1: "😂 +1",
+                      2: "😄 +2",
+                      3: "😎 +3",
+                      4: "🤩 +4",
+                      5: "🤗 +5",
+                    };
+                    return emojiMap[value] || value;
+                  },
+                },
+                grid: { color: "#444" },
+              },
+              x: {
+                ticks: { color: "#ccc" },
+                grid: { color: "#444" },
+              },
+            },
+          },
+        });
+      }
+
+      function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+      }
+
+      // Load on page
+      document.addEventListener("DOMContentLoaded", () => {
+        fetchMoods();
+        fetchDailyCount();
+
+        // Uncomment to test the chart manually:
+        // drawChart(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], [-3, 1, 0, 2, -1, 4, 3]);
+      });
+    </script>
+  </body>
+</html>
