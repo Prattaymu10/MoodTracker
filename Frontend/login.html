@@ -1,143 +1,335 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mood Tracker - Auth</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            animation: {
+              float: "float 3s ease-in-out infinite",
+              glow: "glow 2s ease-in-out infinite alternate",
+              slideInUp: "slideInUp 0.6s ease-out",
+              fadeIn: "fadeIn 0.8s ease-out",
+              shake: "shake 0.5s ease-in-out",
+              success: "success 0.6s ease-out",
+              gradient: "gradient 3s ease infinite",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0px)" },
+                "50%": { transform: "translateY(-10px)" },
+              },
+              glow: {
+                "0%": { boxShadow: "0 0 20px rgba(59, 130, 246, 0.5)" },
+                "100%": { boxShadow: "0 0 30px rgba(59, 130, 246, 0.8)" },
+              },
+              slideInUp: {
+                "0%": { transform: "translateY(30px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              shake: {
+                "0%, 100%": { transform: "translateX(0)" },
+                "25%": { transform: "translateX(-5px)" },
+                "75%": { transform: "translateX(5px)" },
+              },
+              success: {
+                "0%": { transform: "scale(1)" },
+                "50%": { transform: "scale(1.05)" },
+                "100%": { transform: "scale(1)" },
+              },
+              gradient: {
+                "0%": { backgroundPosition: "0% 50%" },
+                "50%": { backgroundPosition: "100% 50%" },
+                "100%": { backgroundPosition: "0% 50%" },
+              },
+            },
+          },
+        },
+      };
+    </script>
   </head>
-  <body class="bg-gray-900 min-h-screen flex items-center justify-center px-4">
-    <div
-      class="bg-gray-800 text-white rounded-3xl shadow-lg p-8 w-full max-w-md"
-    >
-      <!-- Login Form -->
-      <div id="loginForm">
-        <h2 class="text-3xl font-bold mb-6 text-center">Mood Tracker</h2>
+  <body
+    class="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-gray-900 dark:via-blue-900 dark:to-gray-900 transition-all duration-1000"
+  >
+    <!-- Animated Background Elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+      <div
+        class="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-float"
+      ></div>
+      <div
+        class="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float"
+        style="animation-delay: 1s"
+      ></div>
+      <div
+        class="absolute top-1/2 left-3/4 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl animate-float"
+        style="animation-delay: 2s"
+      ></div>
+    </div>
 
-        <!-- Alert -->
-        <div id="alertMessage" class="hidden mb-4 p-4 rounded-lg text-sm"></div>
-
-        <form id="loginFormElement" class="space-y-4">
-          <div>
-            <label class="block mb-1 font-medium">Email</label>
-            <input
-              id="loginEmail"
-              type="email"
-              placeholder="you@example.com"
-              class="w-full p-3 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <div>
-            <label class="block mb-1 font-medium">Password</label>
-            <div class="relative">
-              <input
-                id="loginPassword"
-                type="password"
-                class="w-full p-3 pr-10 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <button
-                type="button"
-                id="toggleLoginPassword"
-                class="absolute right-3 top-3 text-gray-400 hover:text-white"
-              >
-                👁️
-              </button>
-            </div>
-          </div>
-
-          <button
-            id="loginBtn"
-            type="submit"
-            class="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-semibold py-2 rounded-md flex items-center justify-center"
+    <!-- Dark Mode Toggle -->
+    <div class="fixed top-6 right-6 z-50">
+      <button
+        id="darkModeToggle"
+        class="relative p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 group"
+      >
+        <div class="w-6 h-6 relative">
+          <div
+            id="sunIcon"
+            class="absolute inset-0 text-yellow-400 transition-all duration-300 transform rotate-0 scale-100"
           >
-            <div id="loginSpinner" class="hidden animate-spin mr-2">⏳</div>
-            <span id="loginBtnText">Sign In</span>
-          </button>
-        </form>
+            ☀️
+          </div>
+          <div
+            id="moonIcon"
+            class="absolute inset-0 text-blue-300 transition-all duration-300 transform rotate-180 scale-0"
+          >
+            🌙
+          </div>
+        </div>
+      </button>
+    </div>
 
-        <p class="text-sm text-gray-400 mt-6 text-center">
-          Don't have an account?
-          <button id="showSignup" class="text-blue-400 hover:underline ml-1">
-            Sign up
-          </button>
-        </p>
-      </div>
-
-      <!-- Signup Form -->
-      <div id="signupForm" class="hidden">
-        <h2 class="text-3xl font-bold mb-6 text-center">Create Account</h2>
-
-        <!-- Alert -->
+    <div class="relative w-full max-w-md animate-slideInUp">
+      <!-- Glassmorphism Container -->
+      <div
+        class="bg-white/10 dark:bg-gray-800/30 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 rounded-3xl shadow-2xl p-8 relative overflow-hidden"
+      >
+        <!-- Gradient Border Effect -->
         <div
-          id="signupAlertMessage"
-          class="hidden mb-4 p-4 rounded-lg text-sm"
+          class="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-xl opacity-50"
         ></div>
 
-        <form id="signupFormElement" class="space-y-4">
-          <div>
-            <label class="block mb-1 font-medium">Name</label>
-            <input
-              id="signupName"
-              type="text"
-              placeholder="Your name"
-              class="w-full p-3 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <div>
-            <label class="block mb-1 font-medium">Email</label>
-            <input
-              id="signupEmail"
-              type="email"
-              placeholder="you@example.com"
-              class="w-full p-3 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <div>
-            <label class="block mb-1 font-medium">Password</label>
-            <div class="relative">
-              <input
-                id="signupPassword"
-                type="password"
-                placeholder="At least 6 characters"
-                class="w-full p-3 pr-10 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <button
-                type="button"
-                id="toggleSignupPassword"
-                class="absolute right-3 top-3 text-gray-400 hover:text-white"
+        <div class="relative z-10">
+          <!-- Login Form -->
+          <div id="loginForm" class="text-white">
+            <!-- Header with Animation -->
+            <div class="text-center mb-8 animate-fadeIn">
+              <div
+                class="inline-block p-4 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 mb-4 animate-glow"
               >
-                👁️
+                <span class="text-3xl">😊</span>
+              </div>
+              <h2
+                class="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2"
+              >
+                Mood Tracker
+              </h2>
+              <p class="text-gray-300 dark:text-gray-400">
+                Track your emotions, improve your wellbeing
+              </p>
+            </div>
+
+            <!-- Alert -->
+            <div
+              id="alertMessage"
+              class="hidden mb-6 p-4 rounded-2xl backdrop-blur-md border animate-shake"
+            ></div>
+
+            <form id="loginFormElement" class="space-y-6">
+              <div class="group">
+                <label
+                  class="block mb-2 font-medium text-gray-200 dark:text-gray-300 transition-colors duration-300"
+                >
+                  Email
+                </label>
+                <div class="relative">
+                  <input
+                    id="loginEmail"
+                    type="email"
+                    placeholder="you@example.com"
+                    class="w-full p-4 rounded-2xl bg-white/10 dark:bg-gray-700/50 text-white placeholder-gray-400 border border-white/20 dark:border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 hover:bg-white/15 dark:hover:bg-gray-700/70"
+                    required
+                  />
+                  <div
+                    class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-pink-500/0 group-focus-within:from-blue-500/10 group-focus-within:via-purple-500/10 group-focus-within:to-pink-500/10 transition-all duration-500 pointer-events-none"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="group">
+                <label
+                  class="block mb-2 font-medium text-gray-200 dark:text-gray-300 transition-colors duration-300"
+                >
+                  Password
+                </label>
+                <div class="relative">
+                  <input
+                    id="loginPassword"
+                    type="password"
+                    class="w-full p-4 pr-12 rounded-2xl bg-white/10 dark:bg-gray-700/50 text-white placeholder-gray-400 border border-white/20 dark:border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 hover:bg-white/15 dark:hover:bg-gray-700/70"
+                    required
+                  />
+                  <button
+                    type="button"
+                    id="toggleLoginPassword"
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-all duration-300 hover:scale-110"
+                  >
+                    👁️
+                  </button>
+                  <div
+                    class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-pink-500/0 group-focus-within:from-blue-500/10 group-focus-within:via-purple-500/10 group-focus-within:to-pink-500/10 transition-all duration-500 pointer-events-none"
+                  ></div>
+                </div>
+              </div>
+
+              <button
+                id="loginBtn"
+                type="submit"
+                class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center relative overflow-hidden group"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+                ></div>
+                <div id="loginSpinner" class="hidden animate-spin mr-3 text-xl">
+                  ⭐
+                </div>
+                <span id="loginBtnText" class="relative z-10">Sign In</span>
               </button>
+            </form>
+
+            <div class="mt-8 text-center">
+              <p class="text-gray-300 dark:text-gray-400">
+                Don't have an account?
+                <button
+                  id="showSignup"
+                  class="text-blue-400 hover:text-blue-300 ml-1 font-medium transition-colors duration-300 hover:underline"
+                >
+                  Sign up
+                </button>
+              </p>
             </div>
           </div>
 
-          <button
-            id="signupBtn"
-            type="submit"
-            class="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-semibold py-2 rounded-md flex items-center justify-center"
-          >
-            <div id="signupSpinner" class="hidden animate-spin mr-2">⏳</div>
-            <span id="signupBtnText">Sign Up</span>
-          </button>
-        </form>
+          <!-- Signup Form -->
+          <div id="signupForm" class="hidden text-white">
+            <!-- Header with Animation -->
+            <div class="text-center mb-8 animate-fadeIn">
+              <div
+                class="inline-block p-4 rounded-full bg-gradient-to-br from-green-500 to-blue-600 mb-4 animate-glow"
+              >
+                <span class="text-3xl">🌟</span>
+              </div>
+              <h2
+                class="text-4xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent mb-2"
+              >
+                Create Account
+              </h2>
+              <p class="text-gray-300 dark:text-gray-400">
+                Join thousands tracking their mood
+              </p>
+            </div>
 
-        <p class="text-sm text-gray-400 mt-6 text-center">
-          Already have an account?
-          <button id="showLogin" class="text-blue-400 hover:underline ml-1">
-            Log in
-          </button>
-        </p>
+            <!-- Alert -->
+            <div
+              id="signupAlertMessage"
+              class="hidden mb-6 p-4 rounded-2xl backdrop-blur-md border animate-shake"
+            ></div>
+
+            <form id="signupFormElement" class="space-y-6">
+              <div class="group">
+                <label
+                  class="block mb-2 font-medium text-gray-200 dark:text-gray-300"
+                  >Name</label
+                >
+                <div class="relative">
+                  <input
+                    id="signupName"
+                    type="text"
+                    placeholder="Your name"
+                    class="w-full p-4 rounded-2xl bg-white/10 dark:bg-gray-700/50 text-white placeholder-gray-400 border border-white/20 dark:border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300 hover:bg-white/15 dark:hover:bg-gray-700/70"
+                    required
+                  />
+                  <div
+                    class="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500/0 via-blue-500/0 to-purple-500/0 group-focus-within:from-green-500/10 group-focus-within:via-blue-500/10 group-focus-within:to-purple-500/10 transition-all duration-500 pointer-events-none"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="group">
+                <label
+                  class="block mb-2 font-medium text-gray-200 dark:text-gray-300"
+                  >Email</label
+                >
+                <div class="relative">
+                  <input
+                    id="signupEmail"
+                    type="email"
+                    placeholder="you@example.com"
+                    class="w-full p-4 rounded-2xl bg-white/10 dark:bg-gray-700/50 text-white placeholder-gray-400 border border-white/20 dark:border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300 hover:bg-white/15 dark:hover:bg-gray-700/70"
+                    required
+                  />
+                  <div
+                    class="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500/0 via-blue-500/0 to-purple-500/0 group-focus-within:from-green-500/10 group-focus-within:via-blue-500/10 group-focus-within:to-purple-500/10 transition-all duration-500 pointer-events-none"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="group">
+                <label
+                  class="block mb-2 font-medium text-gray-200 dark:text-gray-300"
+                  >Password</label
+                >
+                <div class="relative">
+                  <input
+                    id="signupPassword"
+                    type="password"
+                    placeholder="At least 6 characters"
+                    class="w-full p-4 pr-12 rounded-2xl bg-white/10 dark:bg-gray-700/50 text-white placeholder-gray-400 border border-white/20 dark:border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300 hover:bg-white/15 dark:hover:bg-gray-700/70"
+                    required
+                  />
+                  <button
+                    type="button"
+                    id="toggleSignupPassword"
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-all duration-300 hover:scale-110"
+                  >
+                    👁️
+                  </button>
+                  <div
+                    class="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500/0 via-blue-500/0 to-purple-500/0 group-focus-within:from-green-500/10 group-focus-within:via-blue-500/10 group-focus-within:to-purple-500/10 transition-all duration-500 pointer-events-none"
+                  ></div>
+                </div>
+              </div>
+
+              <button
+                id="signupBtn"
+                type="submit"
+                class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-4 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center relative overflow-hidden group"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+                ></div>
+                <div
+                  id="signupSpinner"
+                  class="hidden animate-spin mr-3 text-xl"
+                >
+                  🌟
+                </div>
+                <span id="signupBtnText" class="relative z-10">Sign Up</span>
+              </button>
+            </form>
+
+            <div class="mt-8 text-center">
+              <p class="text-gray-300 dark:text-gray-400">
+                Already have an account?
+                <button
+                  id="showLogin"
+                  class="text-green-400 hover:text-green-300 ml-1 font-medium transition-colors duration-300 hover:underline"
+                >
+                  Log in
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -145,26 +337,78 @@
       // API Configuration
       const API_BASE_URL = "http://localhost:5000/api";
 
+      // Dark Mode Management
+      function initDarkMode() {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+
+        if (savedTheme === "light" || (!savedTheme && !prefersDark)) {
+          document.documentElement.classList.remove("dark");
+          updateDarkModeToggle(false);
+        } else {
+          document.documentElement.classList.add("dark");
+          updateDarkModeToggle(true);
+        }
+      }
+
+      function updateDarkModeToggle(isDark) {
+        const sunIcon = document.getElementById("sunIcon");
+        const moonIcon = document.getElementById("moonIcon");
+
+        if (isDark) {
+          sunIcon.className =
+            "absolute inset-0 text-yellow-400 transition-all duration-300 transform rotate-180 scale-0";
+          moonIcon.className =
+            "absolute inset-0 text-blue-300 transition-all duration-300 transform rotate-0 scale-100";
+        } else {
+          sunIcon.className =
+            "absolute inset-0 text-yellow-400 transition-all duration-300 transform rotate-0 scale-100";
+          moonIcon.className =
+            "absolute inset-0 text-blue-300 transition-all duration-300 transform rotate-180 scale-0";
+        }
+      }
+
+      document
+        .getElementById("darkModeToggle")
+        .addEventListener("click", () => {
+          const isDark = document.documentElement.classList.toggle("dark");
+          localStorage.setItem("theme", isDark ? "dark" : "light");
+          updateDarkModeToggle(isDark);
+        });
+
+      // Initialize dark mode on page load
+      initDarkMode();
+
       // DOM Elements
       const loginForm = document.getElementById("loginForm");
       const signupForm = document.getElementById("signupForm");
       const showSignupBtn = document.getElementById("showSignup");
       const showLoginBtn = document.getElementById("showLogin");
 
-      // Toggle between login and signup forms
+      // Enhanced form switching with animations
       if (showSignupBtn && showLoginBtn) {
         showSignupBtn.addEventListener("click", () => {
-          loginForm.classList.add("hidden");
-          signupForm.classList.remove("hidden");
+          loginForm.style.animation = "slideInUp 0.4s ease-out reverse";
+          setTimeout(() => {
+            loginForm.classList.add("hidden");
+            signupForm.classList.remove("hidden");
+            signupForm.style.animation = "slideInUp 0.4s ease-out";
+          }, 200);
         });
 
         showLoginBtn.addEventListener("click", () => {
-          signupForm.classList.add("hidden");
-          loginForm.classList.remove("hidden");
+          signupForm.style.animation = "slideInUp 0.4s ease-out reverse";
+          setTimeout(() => {
+            signupForm.classList.add("hidden");
+            loginForm.classList.remove("hidden");
+            loginForm.style.animation = "slideInUp 0.4s ease-out";
+          }, 200);
         });
       }
 
-      // Password toggle functionality
+      // Enhanced password toggle functionality
       const toggleLoginPassword = document.getElementById(
         "toggleLoginPassword"
       );
@@ -191,32 +435,40 @@
         if (input.type === "password") {
           input.type = "text";
           button.textContent = "🙈";
+          button.style.animation = "success 0.3s ease-out";
         } else {
           input.type = "password";
           button.textContent = "👁️";
+          button.style.animation = "success 0.3s ease-out";
         }
       }
 
-      // Utility function to show alerts
+      // Enhanced alert system
       function showAlert(elementId, message, type = "error") {
         const alertElement = document.getElementById(elementId);
         if (!alertElement) return;
 
-        alertElement.className = `mb-4 p-4 rounded-lg ${
-          type === "error"
-            ? "bg-red-100 text-red-700 border border-red-300"
-            : "bg-green-100 text-green-700 border border-green-300"
-        }`;
+        const styles = {
+          error:
+            "bg-red-500/20 text-red-200 border-red-500/30 backdrop-blur-md",
+          success:
+            "bg-green-500/20 text-green-200 border-green-500/30 backdrop-blur-md",
+        };
+
+        alertElement.className = `mb-6 p-4 rounded-2xl ${styles[type]} animate-slideInUp`;
         alertElement.textContent = message;
         alertElement.classList.remove("hidden");
 
-        // Auto-hide after 5 seconds
+        // Enhanced auto-hide with fade out
         setTimeout(() => {
-          alertElement.classList.add("hidden");
+          alertElement.style.animation = "fadeIn 0.3s ease-out reverse";
+          setTimeout(() => {
+            alertElement.classList.add("hidden");
+          }, 300);
         }, 5000);
       }
 
-      // Show/hide loading spinner
+      // Enhanced loading states
       function toggleLoading(buttonId, spinnerId, textId, isLoading) {
         const button = document.getElementById(buttonId);
         const spinner = document.getElementById(spinnerId);
@@ -226,18 +478,18 @@
 
         if (isLoading) {
           button.disabled = true;
-          button.classList.add("opacity-75", "cursor-not-allowed");
+          button.style.animation = "glow 1s ease-in-out infinite alternate";
           spinner.classList.remove("hidden");
           text.textContent = "Please wait...";
         } else {
           button.disabled = false;
-          button.classList.remove("opacity-75", "cursor-not-allowed");
+          button.style.animation = "";
           spinner.classList.add("hidden");
           text.textContent = buttonId.includes("login") ? "Sign In" : "Sign Up";
         }
       }
 
-      // Login functionality
+      // Enhanced login functionality
       const loginFormElement = document.getElementById("loginFormElement");
       if (loginFormElement) {
         loginFormElement.addEventListener("submit", async (e) => {
@@ -246,9 +498,10 @@
           const email = document.getElementById("loginEmail").value.trim();
           const password = document.getElementById("loginPassword").value;
 
-          // Basic validation
           if (!email || !password) {
             showAlert("alertMessage", "Please fill in all fields");
+            document.getElementById("loginFormElement").style.animation =
+              "shake 0.5s ease-in-out";
             return;
           }
 
@@ -266,21 +519,20 @@
             const data = await response.json();
 
             if (data.success) {
-              // ✅ Store JWT token in localStorage
               localStorage.setItem("token", data.token);
+              showAlert("alertMessage", "Login successful! 🎉", "success");
 
-              showAlert(
-                "alertMessage",
-                "Login successful! Redirecting...",
-                "success"
-              );
+              // Enhanced success animation
+              document.getElementById("loginBtn").style.animation =
+                "success 0.6s ease-out";
 
-              // ✅ Redirect to dashboard
               setTimeout(() => {
                 window.location.href = "dashboard.html";
               }, 1000);
             } else {
               showAlert("alertMessage", data.message || "Login failed");
+              document.getElementById("loginFormElement").style.animation =
+                "shake 0.5s ease-in-out";
             }
           } catch (error) {
             console.error("Login error:", error);
@@ -288,13 +540,15 @@
               "alertMessage",
               "Network error. Please check if the server is running."
             );
+            document.getElementById("loginFormElement").style.animation =
+              "shake 0.5s ease-in-out";
           } finally {
             toggleLoading("loginBtn", "loginSpinner", "loginBtnText", false);
           }
         });
       }
 
-      // Signup functionality
+      // Enhanced signup functionality
       const signupFormElement = document.getElementById("signupFormElement");
       if (signupFormElement) {
         signupFormElement.addEventListener("submit", async (e) => {
@@ -304,9 +558,10 @@
           const email = document.getElementById("signupEmail").value.trim();
           const password = document.getElementById("signupPassword").value;
 
-          // Basic validation
           if (!name || !email || !password) {
             showAlert("signupAlertMessage", "Please fill in all fields");
+            document.getElementById("signupFormElement").style.animation =
+              "shake 0.5s ease-in-out";
             return;
           }
 
@@ -315,16 +570,8 @@
               "signupAlertMessage",
               "Password must be at least 6 characters long"
             );
-            return;
-          }
-
-          // Password strength validation
-          const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
-          if (!passwordRegex.test(password)) {
-            showAlert(
-              "signupAlertMessage",
-              "Password must contain at least one uppercase letter, lowercase letter, and number"
-            );
+            document.getElementById("signupFormElement").style.animation =
+              "shake 0.5s ease-in-out";
             return;
           }
 
@@ -344,26 +591,31 @@
             if (data.success) {
               showAlert(
                 "signupAlertMessage",
-                "Account created successfully! Redirecting...",
+                "Account created successfully! 🌟",
                 "success"
               );
 
-              // Simulate redirect after 1 second
+              // Enhanced success animation
+              document.getElementById("signupBtn").style.animation =
+                "success 0.6s ease-out";
+
               setTimeout(() => {
-                alert(
-                  "Account created! You would be redirected to dashboard.html"
-                );
-                window.location.href = "dashboard.html";
+                // Switch back to login form with animation
+                signupForm.style.animation = "slideInUp 0.4s ease-out reverse";
+                setTimeout(() => {
+                  signupForm.classList.add("hidden");
+                  loginForm.classList.remove("hidden");
+                  loginForm.style.animation = "slideInUp 0.4s ease-out";
+                }, 200);
               }, 1000);
             } else {
               let errorMessage = data.message || "Registration failed";
-
-              // Handle validation errors
               if (data.errors && data.errors.length > 0) {
                 errorMessage = data.errors.map((err) => err.msg).join(", ");
               }
-
               showAlert("signupAlertMessage", errorMessage);
+              document.getElementById("signupFormElement").style.animation =
+                "shake 0.5s ease-in-out";
             }
           } catch (error) {
             console.error("Signup error:", error);
@@ -371,19 +623,14 @@
               "signupAlertMessage",
               "Network error. Please check if the server is running."
             );
+            document.getElementById("signupFormElement").style.animation =
+              "shake 0.5s ease-in-out";
           } finally {
             toggleLoading("signupBtn", "signupSpinner", "signupBtnText", false);
           }
         });
       }
 
-      // Check if user is already logged in (simulated)
-      function checkAuthStatus() {
-        // In a real app, you'd check localStorage or sessionStorage here
-        console.log("Checking auth status...");
-      }
-
-      // Check auth status on page load
       document.addEventListener("DOMContentLoaded", checkAuthStatus);
     </script>
   </body>
