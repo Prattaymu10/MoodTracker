@@ -49,11 +49,9 @@ tailwind.config = {
   },
 };
 
-
 // CONFIGURATION & CONSTANTS
 
 const API_BASE_URL = "http://localhost:5000/api";
-
 
 // AUTHENTICATION STATUS CHECK
 
@@ -83,7 +81,6 @@ function checkAuthStatus() {
       });
   }
 }
-
 
 // DARK MODE FUNCTIONALITY
 
@@ -193,7 +190,7 @@ function switchToSignup() {
 }
 
 // Switch from signup to login form with smooth animation
- 
+
 function switchToLogin() {
   const loginForm = document.getElementById("loginForm");
   const signupForm = document.getElementById("signupForm");
@@ -205,7 +202,6 @@ function switchToLogin() {
     loginForm.style.animation = "slideInUp 0.4s ease-out";
   }, 200);
 }
-
 
 // PASSWORD VISIBILITY TOGGLE
 
@@ -230,7 +226,6 @@ function togglePasswordVisibility(inputId, buttonId) {
     button.style.animation = "success 0.3s ease-out";
   }
 }
-
 
 // ALERT SYSTEM
 
@@ -262,7 +257,6 @@ function showAlert(elementId, message, type = "error") {
     }, 300);
   }, 5000);
 }
-
 
 // LOADING STATE MANAGEMENT
 
@@ -371,7 +365,6 @@ async function handleLogin(e) {
     toggleLoading("loginBtn", "loginSpinner", "loginBtnText", false);
   }
 }
-
 
 // SIGNUP FUNCTIONALITY
 
