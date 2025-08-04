@@ -1,15 +1,4 @@
-/**
- * MOOD TRACKER - LOGIN & AUTHENTICATION
- *
- * This file handles user authentication (login/signup) with enhanced UI/UX
- * Features: Dark mode, form validation, loading states, animations
- *
- * Dependencies: Tailwind CSS, Backend API at localhost:5000
- */
-
-// ====================================
 // TAILWIND CONFIGURATION
-// ====================================
 tailwind.config = {
   darkMode: "class",
   theme: {
@@ -60,14 +49,14 @@ tailwind.config = {
   },
 };
 
-// ====================================
+
 // CONFIGURATION & CONSTANTS
-// ====================================
+
 const API_BASE_URL = "http://localhost:5000/api";
 
-// ====================================
+
 // AUTHENTICATION STATUS CHECK
-// ====================================
+
 /**
  * Check if user is already authenticated and redirect to dashboard
  * This prevents logged-in users from seeing the login page
@@ -95,9 +84,9 @@ function checkAuthStatus() {
   }
 }
 
-// ====================================
+
 // DARK MODE FUNCTIONALITY
-// ====================================
+
 /**
  * Initialize dark mode based on user preference or system setting
  */
@@ -135,12 +124,8 @@ function updateDarkModeToggle(isDark) {
   }
 }
 
-// ====================================
 // EVENT LISTENERS SETUP
-// ====================================
-/**
- * Set up all event listeners after DOM is loaded
- */
+
 function setupEventListeners() {
   // Dark mode toggle
   const darkModeToggle = document.getElementById("darkModeToggle");
@@ -193,12 +178,8 @@ function setupEventListeners() {
   }
 }
 
-// ====================================
 // FORM SWITCHING ANIMATIONS
-// ====================================
-/**
- * Switch from login to signup form with smooth animation
- */
+
 function switchToSignup() {
   const loginForm = document.getElementById("loginForm");
   const signupForm = document.getElementById("signupForm");
@@ -211,9 +192,8 @@ function switchToSignup() {
   }, 200);
 }
 
-/**
- * Switch from signup to login form with smooth animation
- */
+// Switch from signup to login form with smooth animation
+ 
 function switchToLogin() {
   const loginForm = document.getElementById("loginForm");
   const signupForm = document.getElementById("signupForm");
@@ -226,9 +206,9 @@ function switchToLogin() {
   }, 200);
 }
 
-// ====================================
+
 // PASSWORD VISIBILITY TOGGLE
-// ====================================
+
 /**
  * Toggle password field visibility
  * @param {string} inputId - ID of password input field
@@ -251,9 +231,9 @@ function togglePasswordVisibility(inputId, buttonId) {
   }
 }
 
-// ====================================
+
 // ALERT SYSTEM
-// ====================================
+
 /**
  * Display alert messages with animations
  * @param {string} elementId - ID of alert container
@@ -283,9 +263,9 @@ function showAlert(elementId, message, type = "error") {
   }, 5000);
 }
 
-// ====================================
+
 // LOADING STATE MANAGEMENT
-// ====================================
+
 /**
  * Toggle loading state for form buttons
  * @param {string} buttonId - ID of button element
@@ -313,9 +293,8 @@ function toggleLoading(buttonId, spinnerId, textId, isLoading) {
   }
 }
 
-// ====================================
 // LOGIN FUNCTIONALITY
-// ====================================
+
 /**
  * Handle login form submission
  * @param {Event} e - Form submit event
@@ -393,9 +372,9 @@ async function handleLogin(e) {
   }
 }
 
-// ====================================
+
 // SIGNUP FUNCTIONALITY
-// ====================================
+
 /**
  * Handle signup form submission
  * @param {Event} e - Form submit event
@@ -416,8 +395,8 @@ async function handleSignup(e) {
   }
 
   // Name validation
-  if (name.length < 2) {
-    showAlert("signupAlertMessage", "Name must be at least 2 characters long");
+  if (name.length < 3) {
+    showAlert("signupAlertMessage", "Name must be at least 3 characters long");
     document.getElementById("signupFormElement").style.animation =
       "shake 0.5s ease-in-out";
     return;
@@ -505,17 +484,12 @@ async function handleSignup(e) {
   }
 }
 
-// ====================================
 // INITIALIZATION
-// ====================================
-/**
- * Initialize the application when DOM is loaded
- */
+
 function initializeApp() {
   initDarkMode();
   setupEventListeners();
   checkAuthStatus();
 }
 
-// Start the application when DOM is ready
 document.addEventListener("DOMContentLoaded", initializeApp);

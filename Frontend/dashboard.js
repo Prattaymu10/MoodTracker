@@ -1,15 +1,4 @@
-/**
- * MOOD TRACKER - DASHBOARD
- *
- * Main dashboard functionality for mood tracking application
- * Features: Mood logging, analytics, charts, daily tracking
- *
- * Dependencies: Chart.js, Tailwind CSS, Backend API at localhost:5000
- */
-
-// ====================================
 // TAILWIND CONFIGURATION
-// ====================================
 tailwind.config = {
   darkMode: "class",
   theme: {
@@ -77,15 +66,15 @@ tailwind.config = {
   },
 };
 
-// ====================================
+
 // GLOBAL VARIABLES
-// ====================================
+
 let moodChart = null; // Chart.js instance
 const API_BASE_URL = "http://localhost:5000/api";
 
-// ====================================
+
 // AUTHENTICATION MANAGEMENT
-// ====================================
+
 /**
  * Check if user is authenticated and redirect to login if not
  * @returns {boolean} - Whether user is authenticated
@@ -117,9 +106,9 @@ function logout() {
   }, 1000);
 }
 
-// ====================================
+
 // MOOD UTILITIES
-// ====================================
+
 /**
  * Get emoji representation for mood score
  * @param {number} score - Mood score (-5 to +5)
@@ -164,12 +153,8 @@ function getMoodLabel(score) {
   return labelMap[score.toString()] || "Unknown";
 }
 
-// ====================================
 // TIP SYSTEM
-// ====================================
-/**
- * Array of wellness tips to display to users
- */
+
 const tips = [
   "Take 10 deep breaths and feel your body relax with each exhale.",
   "Drink a full glass of water and notice how refreshed you feel.",
@@ -188,9 +173,9 @@ const tips = [
   "Read an inspiring quote or watch a motivational video.",
 ];
 
-/**
- * Update the tip of the day with a random wellness tip
- */
+
+//Update the tip of the day with a random wellness tip
+
 function updateTip() {
   const randomTip = tips[Math.floor(Math.random() * tips.length)];
   const tipElement = document.getElementById("tipText");
@@ -199,9 +184,9 @@ function updateTip() {
   }
 }
 
-// ====================================
+
 // DATE & TIME MANAGEMENT
-// ====================================
+
 /**
  * Update the current date and time display
  * Called every minute to keep time current
@@ -230,9 +215,9 @@ function updateDateTime() {
   }
 }
 
-// ====================================
+
 // DAILY COUNT MANAGEMENT
-// ====================================
+
 /**
  * Fetch and display daily mood entry count
  * Shows progress toward daily goal (10 entries max)
@@ -303,9 +288,9 @@ async function fetchDailyCount() {
   }
 }
 
-// ====================================
+
 // MOOD SAVING
-// ====================================
+
 /**
  * Save a new mood entry
  * Includes validation, loading states, and user feedback
@@ -401,9 +386,9 @@ async function saveMood() {
   }
 }
 
-// ====================================
+
 // NOTIFICATION SYSTEM
-// ====================================
+
 /**
  * Display notification messages with animations
  * @param {string} message - Message to display
@@ -443,13 +428,9 @@ function showNotification(message, type = "info") {
   }, 5000);
 }
 
-// ====================================
+
 // MOOD DATA FETCHING
-// ====================================
-/**
- * Fetch all mood entries from the API
- * Updates table, stats, and chart with latest data
- */
+
 async function fetchMoods() {
   const token = localStorage.getItem("token");
   if (!token) return;
@@ -479,9 +460,9 @@ async function fetchMoods() {
   }
 }
 
-// ====================================
+
 // MOOD TABLE RENDERING
-// ====================================
+
 /**
  * Update the mood entries table
  * @param {Array} moods - Array of mood entries
@@ -556,9 +537,9 @@ function viewMoodDetails(entryId) {
   showNotification("Mood details feature coming soon!", "info");
 }
 
-// ====================================
+
 // MOOD STATISTICS
-// ====================================
+
 /**
  * Update mood statistics and insights
  * @param {Array} moods - Array of mood entries
@@ -745,9 +726,9 @@ function calculateTrend(moods) {
   }
 }
 
-// ====================================
+
 // CHART RENDERING
-// ====================================
+
 /**
  * Draw mood chart using Chart.js
  * @param {Array} moods - Array of mood entries
@@ -883,9 +864,9 @@ function drawChart(moods) {
   });
 }
 
-// ====================================
+
 // INITIALIZATION
-// ====================================
+
 /**
  * Initialize the dashboard when DOM is loaded
  * Sets up all components and loads initial data
