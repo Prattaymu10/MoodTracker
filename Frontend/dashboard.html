@@ -4,75 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mood Dashboard</title>
+    <meta
+      name="description"
+      content="Track your daily moods and emotional wellbeing"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            animation: {
-              float: "float 3s ease-in-out infinite",
-              glow: "glow 2s ease-in-out infinite alternate",
-              slideInUp: "slideInUp 0.6s ease-out",
-              slideInLeft: "slideInLeft 0.6s ease-out",
-              slideInRight: "slideInRight 0.6s ease-out",
-              fadeIn: "fadeIn 0.8s ease-out",
-              "pulse-soft": "pulse-soft 2s ease-in-out infinite",
-              "bounce-soft": "bounce-soft 2s ease-in-out infinite",
-              shimmer: "shimmer 2s linear infinite",
-              "scale-in": "scale-in 0.5s ease-out",
-              wiggle: "wiggle 1s ease-in-out infinite",
-            },
-            keyframes: {
-              float: {
-                "0%, 100%": { transform: "translateY(0px)" },
-                "50%": { transform: "translateY(-8px)" },
-              },
-              glow: {
-                "0%": { boxShadow: "0 0 20px rgba(59, 130, 246, 0.3)" },
-                "100%": { boxShadow: "0 0 30px rgba(59, 130, 246, 0.6)" },
-              },
-              slideInUp: {
-                "0%": { transform: "translateY(30px)", opacity: "0" },
-                "100%": { transform: "translateY(0)", opacity: "1" },
-              },
-              slideInLeft: {
-                "0%": { transform: "translateX(-30px)", opacity: "0" },
-                "100%": { transform: "translateX(0)", opacity: "1" },
-              },
-              slideInRight: {
-                "0%": { transform: "translateX(30px)", opacity: "0" },
-                "100%": { transform: "translateX(0)", opacity: "1" },
-              },
-              fadeIn: {
-                "0%": { opacity: "0" },
-                "100%": { opacity: "1" },
-              },
-              "pulse-soft": {
-                "0%, 100%": { opacity: "1" },
-                "50%": { opacity: "0.8" },
-              },
-              "bounce-soft": {
-                "0%, 100%": { transform: "translateY(0)" },
-                "50%": { transform: "translateY(-4px)" },
-              },
-              shimmer: {
-                "0%": { backgroundPosition: "-200% 0" },
-                "100%": { backgroundPosition: "200% 0" },
-              },
-              "scale-in": {
-                "0%": { transform: "scale(0.8)", opacity: "0" },
-                "100%": { transform: "scale(1)", opacity: "1" },
-              },
-              wiggle: {
-                "0%, 100%": { transform: "rotate(-3deg)" },
-                "50%": { transform: "rotate(3deg)" },
-              },
-            },
-          },
-        },
-      };
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   </head>
 
@@ -94,14 +30,17 @@
       ></div>
     </div>
 
+    <!-- Main Container -->
     <div class="max-w-6xl mx-auto space-y-8 relative z-10">
       <!-- Enhanced Header -->
-      <div
+      <header
         class="flex flex-col md:flex-row justify-between items-start md:items-center bg-gray-800/30 backdrop-blur-xl border border-gray-700/50 p-6 rounded-3xl shadow-2xl animate-slideInUp"
       >
         <div class="flex items-center space-x-4 mb-4 md:mb-0">
           <div
             class="p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 animate-glow"
+            role="img"
+            aria-label="Mood tracker icon"
           >
             <span class="text-2xl animate-bounce-soft">😊</span>
           </div>
@@ -114,24 +53,32 @@
             <div
               id="currentDate"
               class="text-sm text-gray-400 animate-pulse-soft"
+              aria-live="polite"
             ></div>
           </div>
         </div>
 
         <div class="flex items-center gap-4">
+          <!-- User Info -->
+          <div id="userInfo" class="hidden md:block text-sm text-gray-300">
+            <span id="userName">Loading...</span>
+          </div>
+
           <!-- Sign Out Button -->
           <button
             onclick="logout()"
-            class="px-6 py-3 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-300 hover:text-red-200 font-medium rounded-2xl transition-all duration-300 backdrop-blur-md hover:scale-105"
+            class="px-6 py-3 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-300 hover:text-red-200 font-medium rounded-2xl transition-all duration-300 backdrop-blur-md hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+            aria-label="Sign out of account"
           >
             Sign Out
           </button>
         </div>
-      </div>
+      </header>
 
-      <!-- Enhanced Mood Entry -->
-      <div
+      <!-- Enhanced Mood Entry Section -->
+      <section
         class="bg-gray-800/30 backdrop-blur-xl border border-gray-700/50 p-8 rounded-3xl shadow-2xl animate-slideInLeft relative overflow-hidden"
+        aria-labelledby="mood-entry-title"
       >
         <!-- Gradient Background Effect -->
         <div
@@ -141,97 +88,131 @@
         <div class="relative z-10">
           <div class="flex justify-between items-center mb-6">
             <h2
+              id="mood-entry-title"
               class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
             >
               Daily Mood Tracker
             </h2>
           </div>
 
+          <!-- Daily Progress Counter -->
           <div
             id="dailyCounter"
             class="mb-6 p-4 rounded-2xl backdrop-blur-md text-sm animate-scale-in"
+            role="status"
+            aria-live="polite"
           >
             <span id="counterText">Loading daily count...</span>
           </div>
 
           <div class="grid md:grid-cols-2 gap-6">
-            <div class="space-y-4">
-              <label class="block font-medium text-lg"
-                >How are you feeling?</label
-              >
-              <div class="relative group">
-                <select
-                  id="mood"
-                  class="w-full p-4 rounded-2xl bg-gray-700/50 border border-gray-600/50 text-white backdrop-blur-md transition-all duration-300 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 hover:bg-gray-700/70 text-lg"
-                >
-                  <option value="-5">😡 Furious (-5)</option>
-                  <option value="-4">😩 Exhausted (-4)</option>
-                  <option value="-3">😭 Overwhelmed (-3)</option>
-                  <option value="-2">😔 Disappointed (-2)</option>
-                  <option value="-1">😬 Anxious (-1)</option>
-                  <option value="0" selected>😐 Neutral (0)</option>
-                  <option value="1">😂 Amused (+1)</option>
-                  <option value="2">😄 Joyful (+2)</option>
-                  <option value="3">😎 Confident (+3)</option>
-                  <option value="4">🤩 Inspired (+4)</option>
-                  <option value="5">🤗 Ecstatic (+5)</option>
-                </select>
-                <div
-                  class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-pink-500/0 group-focus-within:from-blue-500/10 group-focus-within:via-purple-500/10 group-focus-within:to-pink-500/10 transition-all duration-500 pointer-events-none"
-                ></div>
+            <!-- Mood Entry Form -->
+            <form id="moodForm" class="space-y-4" onsubmit="saveMood(event)">
+              <div>
+                <label for="mood" class="block font-medium text-lg mb-2">
+                  How are you feeling?
+                </label>
+                <div class="relative group">
+                  <select
+                    id="mood"
+                    name="mood"
+                    class="w-full p-4 rounded-2xl bg-gray-700/50 border border-gray-600/50 text-white backdrop-blur-md transition-all duration-300 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 hover:bg-gray-700/70 text-lg focus:outline-none"
+                    required
+                    aria-describedby="mood-description"
+                  >
+                    <option value="">Select your mood...</option>
+                    <option value="-5">😡 Furious (-5)</option>
+                    <option value="-4">😩 Exhausted (-4)</option>
+                    <option value="-3">😭 Overwhelmed (-3)</option>
+                    <option value="-2">😔 Disappointed (-2)</option>
+                    <option value="-1">😬 Anxious (-1)</option>
+                    <option value="0">😐 Neutral (0)</option>
+                    <option value="1">😂 Amused (+1)</option>
+                    <option value="2">😄 Joyful (+2)</option>
+                    <option value="3">😎 Confident (+3)</option>
+                    <option value="4">🤩 Inspired (+4)</option>
+                    <option value="5">🤗 Ecstatic (+5)</option>
+                  </select>
+                  <div
+                    class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-pink-500/0 group-focus-within:from-blue-500/10 group-focus-within:via-purple-500/10 group-focus-within:to-pink-500/10 transition-all duration-500 pointer-events-none"
+                  ></div>
+                </div>
+                <div id="mood-description" class="sr-only">
+                  Select a mood rating from -5 (very negative) to +5 (very
+                  positive)
+                </div>
               </div>
 
-              <div class="space-y-2">
-                <label class="block font-medium text-lg"
-                  >Tell us more about your day</label
-                >
+              <div>
+                <label for="note" class="block font-medium text-lg mb-2">
+                  Tell us more about your day
+                </label>
                 <div class="relative group">
                   <textarea
                     id="note"
-                    class="w-full p-4 rounded-2xl bg-gray-700/50 border border-gray-600/50 text-white placeholder-gray-400 backdrop-blur-md transition-all duration-300 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 hover:bg-gray-700/70 resize-none"
+                    name="note"
+                    class="w-full p-4 rounded-2xl bg-gray-700/50 border border-gray-600/50 text-white placeholder-gray-400 backdrop-blur-md transition-all duration-300 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 hover:bg-gray-700/70 resize-none focus:outline-none"
                     rows="4"
                     placeholder="Write about your day, what made you feel this way, or any thoughts you'd like to track..."
+                    maxlength="500"
+                    aria-describedby="note-description"
                   ></textarea>
                   <div
                     class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-pink-500/0 group-focus-within:from-blue-500/10 group-focus-within:via-purple-500/10 group-focus-within:to-pink-500/10 transition-all duration-500 pointer-events-none"
                   ></div>
                 </div>
+                <div id="note-description" class="text-xs text-gray-400 mt-1">
+                  Optional: Share what influenced your mood today (max 500
+                  characters)
+                </div>
               </div>
 
               <button
                 id="saveMoodBtn"
-                onclick="saveMood()"
-                class="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none relative overflow-hidden group"
+                type="submit"
+                class="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none relative overflow-hidden group focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                aria-describedby="save-button-description"
               >
                 <div
                   class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"
                 ></div>
                 <span class="relative z-10 flex items-center justify-center">
-                  <span class="mr-2">✨</span>
+                  <span class="mr-2" aria-hidden="true">✨</span>
                   Save My Mood
                 </span>
               </button>
-            </div>
+              <div id="save-button-description" class="sr-only">
+                Save your current mood and optional note to track your emotional
+                wellbeing
+              </div>
+            </form>
 
-            <div
+            <!-- Tip Box -->
+            <aside
               id="tipBox"
               class="p-6 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-md border border-blue-500/30 animate-float"
+              aria-labelledby="tip-title"
             >
               <div class="flex items-start space-x-3">
-                <span class="text-2xl animate-wiggle">💡</span>
+                <span class="text-2xl animate-wiggle" aria-hidden="true"
+                  >💡</span
+                >
                 <div>
-                  <h3 class="font-bold text-blue-200 mb-2">Tip of the Day</h3>
+                  <h3 id="tip-title" class="font-bold text-blue-200 mb-2">
+                    Tip of the Day
+                  </h3>
                   <p class="text-blue-100" id="tipText">Loading tip...</p>
                 </div>
               </div>
-            </div>
+            </aside>
           </div>
         </div>
-      </div>
+      </section>
 
       <!-- Enhanced Mood Chart & Analytics -->
-      <div
+      <section
         class="bg-gray-800/30 backdrop-blur-xl border border-gray-700/50 p-8 rounded-3xl shadow-2xl animate-slideInRight relative overflow-hidden"
+        aria-labelledby="analytics-title"
       >
         <!-- Gradient Background Effect -->
         <div
@@ -244,6 +225,7 @@
           >
             <div>
               <h2
+                id="analytics-title"
                 class="text-3xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent mb-2"
               >
                 7-Day Mood Overview
@@ -254,9 +236,15 @@
             </div>
 
             <!-- Mood Stats -->
-            <div class="flex space-x-4 mt-4 md:mt-0">
+            <div
+              class="flex space-x-4 mt-4 md:mt-0"
+              role="group"
+              aria-label="Mood statistics"
+            >
               <div
                 class="text-center p-3 rounded-2xl bg-green-500/20 border border-green-500/30"
+                role="status"
+                aria-label="Average mood score"
               >
                 <div class="text-2xl font-bold text-green-300" id="avgMood">
                   --
@@ -265,6 +253,8 @@
               </div>
               <div
                 class="text-center p-3 rounded-2xl bg-blue-500/20 border border-blue-500/30"
+                role="status"
+                aria-label="Total mood entries"
               >
                 <div class="text-2xl font-bold text-blue-300" id="totalEntries">
                   0
@@ -274,16 +264,19 @@
             </div>
           </div>
 
+          <!-- Chart Container -->
           <div
             class="relative h-80 mb-8 p-4 rounded-2xl bg-white/5 backdrop-blur-sm"
+            role="img"
+            aria-label="7-day mood trend chart"
           >
             <canvas id="moodChart" class="absolute inset-4"></canvas>
           </div>
 
-          <!-- Recent Entries -->
+          <!-- Recent Entries Table -->
           <div class="space-y-4">
             <h3 class="text-xl font-semibold text-gray-200 flex items-center">
-              <span class="mr-2">📝</span>
+              <span class="mr-2" aria-hidden="true">📝</span>
               Recent Entries
             </h3>
 
@@ -291,13 +284,24 @@
               class="overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm"
             >
               <div class="overflow-x-auto">
-                <table class="w-full text-left">
+                <table
+                  class="w-full text-left"
+                  aria-label="Recent mood entries"
+                >
                   <thead>
                     <tr class="border-b border-gray-700/50 bg-white/5">
-                      <th class="p-4 font-medium text-gray-300">Date & Time</th>
-                      <th class="p-4 font-medium text-gray-300">Mood</th>
-                      <th class="p-4 font-medium text-gray-300">Note</th>
-                      <th class="p-4 font-medium text-gray-300">Actions</th>
+                      <th scope="col" class="p-4 font-medium text-gray-300">
+                        Date & Time
+                      </th>
+                      <th scope="col" class="p-4 font-medium text-gray-300">
+                        Mood
+                      </th>
+                      <th scope="col" class="p-4 font-medium text-gray-300">
+                        Note
+                      </th>
+                      <th scope="col" class="p-4 font-medium text-gray-300">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody id="moodTableBody" class="divide-y divide-gray-700/30">
@@ -308,11 +312,12 @@
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       <!-- Mood Insights Card -->
-      <div
+      <section
         class="bg-gray-800/30 backdrop-blur-xl border border-gray-700/50 p-8 rounded-3xl shadow-2xl animate-slideInUp relative overflow-hidden"
+        aria-labelledby="insights-title"
       >
         <div
           class="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-red-500/10 rounded-3xl opacity-50"
@@ -320,16 +325,23 @@
 
         <div class="relative z-10">
           <h2
+            id="insights-title"
             class="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6"
           >
             Your Mood Insights
           </h2>
 
-          <div class="grid md:grid-cols-3 gap-6">
+          <div
+            class="grid md:grid-cols-3 gap-6"
+            role="group"
+            aria-label="Mood insights"
+          >
             <div
               class="p-6 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 animate-float"
+              role="status"
+              aria-label="Current logging streak"
             >
-              <div class="text-3xl mb-3">🔥</div>
+              <div class="text-3xl mb-3" aria-hidden="true">🔥</div>
               <h3 class="font-bold text-lg mb-2">Current Streak</h3>
               <p class="text-2xl font-bold text-orange-300" id="streakCount">
                 0 days
@@ -340,8 +352,10 @@
             <div
               class="p-6 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 animate-float"
               style="animation-delay: 0.2s"
+              role="status"
+              aria-label="Mood trend indicator"
             >
-              <div class="text-3xl mb-3">📈</div>
+              <div class="text-3xl mb-3" aria-hidden="true">📈</div>
               <h3 class="font-bold text-lg mb-2">Mood Trend</h3>
               <p class="text-2xl font-bold text-green-300" id="trendIndicator">
                 Stable
@@ -352,8 +366,10 @@
             <div
               class="p-6 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 animate-float"
               style="animation-delay: 0.4s"
+              role="status"
+              aria-label="Best mood day this week"
             >
-              <div class="text-3xl mb-3">⭐</div>
+              <div class="text-3xl mb-3" aria-hidden="true">⭐</div>
               <h3 class="font-bold text-lg mb-2">Best Day</h3>
               <p class="text-2xl font-bold text-yellow-300" id="bestMoodDay">
                 Today
@@ -362,582 +378,44 @@
             </div>
           </div>
         </div>
+      </section>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div
+      id="loadingOverlay"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center"
+    >
+      <div
+        class="bg-gray-800/90 p-8 rounded-3xl border border-gray-700/50 text-center"
+      >
+        <div class="animate-spin text-4xl mb-4">⭐</div>
+        <p class="text-white text-lg">Loading your mood data...</p>
       </div>
     </div>
 
-    <script>
-      let moodChart = null;
+    <!-- Error Message Template -->
+    <div
+      id="errorTemplate"
+      class="hidden fixed bottom-6 left-6 right-6 md:left-auto md:right-6 md:max-w-md z-50 p-4 bg-red-500/20 border border-red-500/30 text-red-200 rounded-2xl backdrop-blur-xl"
+    >
+      <div class="flex items-start space-x-3">
+        <span class="text-xl">❌</span>
+        <div class="flex-1">
+          <p class="font-medium">Connection Error</p>
+          <p class="text-sm opacity-80">
+            Please check your internet connection and try again.
+          </p>
+        </div>
+        <button
+          onclick="this.parentElement.parentElement.classList.add('hidden')"
+          class="text-gray-400 hover:text-white"
+        >
+          ×
+        </button>
+      </div>
+    </div>
 
-      // Check authentication on page load
-      function checkAuth() {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          window.location.href = "login.html";
-          return false;
-        }
-        return true;
-      }
-
-      // Logout function
-      function logout() {
-        localStorage.removeItem("token");
-        window.location.href = "login.html";
-      }
-
-      // Get emoji for mood score
-      function getEmoji(score) {
-        const emojiMap = {
-          "-5": "😡",
-          "-4": "😩",
-          "-3": "😭",
-          "-2": "😔",
-          "-1": "😬",
-          0: "😐",
-          1: "😂",
-          2: "😄",
-          3: "😎",
-          4: "🤩",
-          5: "🤗",
-        };
-        return emojiMap[score.toString()] || "😐";
-      }
-
-      // Enhanced tip system with more variety
-      const tips = [
-        "Take 10 deep breaths and feel your body relax with each exhale.",
-        "Drink a full glass of water and notice how refreshed you feel.",
-        "Step outside for 5 minutes and soak in some natural light.",
-        "Write down 3 specific things you're grateful for right now.",
-        "Do 10 jumping jacks or stretch your arms above your head.",
-        "Tidy up a small area around you for an instant mood boost.",
-        "Listen to your favorite uplifting song and let yourself dance.",
-        "Call or text someone you care about just to say hello.",
-        "Look in the mirror and give yourself a genuine compliment.",
-        "Take a moment to notice something beautiful in your surroundings.",
-        "Practice the 5-4-3-2-1 grounding technique with your senses.",
-        "Smile for 30 seconds - your brain will think you're happier!",
-        "Do something kind for someone else, even if it's small.",
-        "Spend 2 minutes focusing only on your breathing.",
-        "Read an inspiring quote or watch a motivational video.",
-      ];
-
-      function updateTip() {
-        const randomTip = tips[Math.floor(Math.random() * tips.length)];
-        document.getElementById("tipText").textContent = randomTip;
-      }
-
-      updateTip();
-
-      // Enhanced date/time display
-      function updateDateTime() {
-        const now = new Date();
-        const formattedDate = now.toLocaleDateString("en-US", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-        const formattedTime = now.toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        document.getElementById("currentDate").innerHTML = `
-          <span class="inline-flex items-center">
-            <span class="mr-2">📅</span>
-            ${formattedDate} • ${formattedTime}
-          </span>
-        `;
-      }
-
-      updateDateTime();
-      setInterval(updateDateTime, 60000);
-
-      // Enhanced daily count fetching
-      async function fetchDailyCount() {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
-        try {
-          const res = await fetch(
-            "http://localhost:5000/api/moods/daily-count",
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          const data = await res.json();
-          const counterText = document.getElementById("counterText");
-          const saveMoodBtn = document.getElementById("saveMoodBtn");
-
-          if (data.success) {
-            if (data.remaining <= 0) {
-              counterText.innerHTML = `
-                <div class="flex items-center">
-                  <span class="text-2xl mr-3">🎯</span>
-                  <div>
-                    <div class="font-bold">Daily limit reached!</div>
-                    <div class="text-sm opacity-80">You've logged <strong>${data.todayCount}/10</strong> moods today. Great job!</div>
-                  </div>
-                </div>
-              `;
-              counterText.parentElement.className =
-                "mb-6 p-4 rounded-2xl bg-red-500/20 border border-red-500/30 text-red-200 backdrop-blur-md animate-scale-in";
-              saveMoodBtn.disabled = true;
-              saveMoodBtn.innerHTML = `
-                <span class="relative z-10 flex items-center justify-center">
-                  <span class="mr-2">✅</span>
-                  Daily Goal Complete!
-                </span>
-              `;
-            } else {
-              counterText.innerHTML = `
-                <div class="flex items-center">
-                  <span class="text-2xl mr-3">📊</span>
-                  <div>
-                    <div class="font-bold">Today's Progress: <span class="text-blue-300">${data.todayCount}/10</span></div>
-                    <div class="text-sm opacity-80">${data.remaining} entries remaining</div>
-                  </div>
-                </div>
-              `;
-              counterText.parentElement.className =
-                "mb-6 p-4 rounded-2xl bg-blue-500/20 border border-blue-500/30 text-blue-200 backdrop-blur-md animate-scale-in";
-              saveMoodBtn.disabled = false;
-            }
-          }
-        } catch (error) {
-          console.error("Failed to fetch daily count:", error);
-        }
-      }
-
-      // Enhanced mood saving
-      async function saveMood() {
-        const token = localStorage.getItem("token");
-        const moodValue = document.getElementById("mood").value;
-        const note = document.getElementById("note").value;
-        const moodScore = parseInt(moodValue);
-        const moodEmoji = getEmoji(moodScore);
-
-        if (!token) {
-          showNotification("Please log in to save your mood.", "error");
-          return;
-        }
-
-        // Add loading state
-        const saveBtn = document.getElementById("saveMoodBtn");
-        const originalContent = saveBtn.innerHTML;
-        saveBtn.innerHTML = `
-          <span class="relative z-10 flex items-center justify-center">
-            <span class="animate-spin mr-2">⭐</span>
-            Saving...
-          </span>
-        `;
-        saveBtn.disabled = true;
-
-        try {
-          const res = await fetch("http://localhost:5000/api/moods", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              mood: moodEmoji,
-              moodScore,
-              note,
-            }),
-          });
-          const data = await res.json();
-
-          if (data.success) {
-            // Success animation
-            saveBtn.style.animation = "glow 0.6s ease-out";
-            saveBtn.innerHTML = `
-              <span class="relative z-10 flex items-center justify-center">
-                <span class="mr-2">✅</span>
-                Saved Successfully!
-              </span>
-            `;
-
-            // Show success message
-            showNotification(
-              `Mood saved! ${
-                data.remainingToday || "Check"
-              } entries remaining today.`,
-              "success"
-            );
-
-            // Clear form
-            document.getElementById("note").value = "";
-
-            // Refresh data
-            fetchMoods();
-            fetchDailyCount();
-
-            // Reset button after delay
-            setTimeout(() => {
-              saveBtn.innerHTML = originalContent;
-              saveBtn.disabled = false;
-              saveBtn.style.animation = "";
-            }, 2000);
-          } else {
-            throw new Error(data.message || "Failed to save mood");
-          }
-        } catch (error) {
-          console.error("Save mood error:", error);
-          showNotification("Failed to save mood. Please try again.", "error");
-          saveBtn.innerHTML = originalContent;
-          saveBtn.disabled = false;
-        }
-      }
-
-      // Enhanced notification system
-      function showNotification(message, type = "info") {
-        const notification = document.createElement("div");
-        const bgColor = {
-          success: "bg-green-500/20 border-green-500/30 text-green-200",
-          error: "bg-red-500/20 border-red-500/30 text-red-200",
-          info: "bg-blue-500/20 border-blue-500/30 text-blue-200",
-        };
-
-        notification.className = `fixed top-6 right-6 z-50 p-4 rounded-2xl backdrop-blur-xl border ${bgColor[type]} shadow-2xl animate-slideInRight max-w-sm`;
-        notification.innerHTML = `
-          <div class="flex items-start space-x-3">
-            <span class="text-xl">${
-              type === "success" ? "✅" : type === "error" ? "❌" : "ℹ️"
-            }</span>
-            <p class="flex-1">${message}</p>
-            <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-white">×</button>
-          </div>
-        `;
-
-        document.body.appendChild(notification);
-
-        setTimeout(() => {
-          if (notification.parentElement) {
-            notification.style.animation = "slideInRight 0.3s ease-out reverse";
-            setTimeout(() => {
-              if (notification.parentElement) {
-                notification.remove();
-              }
-            }, 300);
-          }
-        }, 5000);
-      }
-
-      // Enhanced mood fetching and analytics
-      async function fetchMoods() {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
-        try {
-          const res = await fetch("http://localhost:5000/api/moods", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const data = await res.json();
-
-          if (data.success && Array.isArray(data.moods)) {
-            updateMoodTable(data.moods);
-            updateMoodStats(data.moods);
-            drawChart(data.moods);
-          }
-        } catch (error) {
-          console.error("Fetch moods error:", error);
-        }
-      }
-
-      // Enhanced table rendering
-      function updateMoodTable(moods) {
-        const tableBody = document.getElementById("moodTableBody");
-        tableBody.innerHTML = "";
-
-        if (moods.length === 0) {
-          tableBody.innerHTML = `
-            <tr>
-              <td colspan="4" class="p-8 text-center text-gray-400">
-                <div class="text-4xl mb-2">📊</div>
-                <div>No mood entries yet. Start tracking your mood today!</div>
-              </td>
-            </tr>
-          `;
-          return;
-        }
-
-        moods.slice(0, 10).forEach((entry, index) => {
-          const date = new Date(entry.date);
-          const formattedDate = date.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-          });
-          const formattedTime = date.toLocaleTimeString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-
-          const row = document.createElement("tr");
-          row.className =
-            "hover:bg-white/5 transition-colors duration-300 animate-fadeIn";
-          row.style.animationDelay = `${index * 0.1}s`;
-          row.innerHTML = `
-            <td class="p-4">
-              <div class="font-medium">${formattedDate}</div>
-              <div class="text-sm text-gray-400">${formattedTime}</div>
-            </td>
-            <td class="p-4">
-              <span class="text-3xl">${getEmoji(entry.moodScore)}</span>
-              <div class="text-sm text-gray-400">${
-                entry.moodScore > 0 ? "+" : ""
-              }${entry.moodScore}</div>
-            </td>
-            <td class="p-4 max-w-xs">
-              <div class="truncate">${entry.note || "—"}</div>
-            </td>
-            <td class="p-4">
-              <button onclick="viewMoodDetails('${
-                entry._id || index
-              }')" class="text-blue-400 hover:text-blue-300 text-sm underline">
-                View
-              </button>
-            </td>
-          `;
-          tableBody.appendChild(row);
-        });
-      }
-
-      // View mood details function
-      function viewMoodDetails(entryId) {
-        showNotification("Mood details feature coming soon!", "info");
-      }
-
-      // Mood analytics
-      function updateMoodStats(moods) {
-        if (moods.length === 0) {
-          document.getElementById("avgMood").textContent = "--";
-          document.getElementById("totalEntries").textContent = "0";
-          document.getElementById("streakCount").textContent = "0 days";
-          document.getElementById("bestMoodDay").textContent = "No data";
-          return;
-        }
-
-        // Calculate average mood
-        const avgMood = (
-          moods.reduce((sum, entry) => sum + entry.moodScore, 0) / moods.length
-        ).toFixed(1);
-        document.getElementById("avgMood").textContent =
-          avgMood > 0 ? `+${avgMood}` : avgMood;
-
-        // Total entries
-        document.getElementById("totalEntries").textContent = moods.length;
-
-        // Calculate streak (consecutive days with entries)
-        const today = new Date();
-        let streak = 0;
-        for (let i = 0; i < 30; i++) {
-          const checkDate = new Date(today);
-          checkDate.setDate(today.getDate() - i);
-          const hasEntry = moods.some((mood) => {
-            const moodDate = new Date(mood.date);
-            return moodDate.toDateString() === checkDate.toDateString();
-          });
-          if (hasEntry) {
-            streak++;
-          } else if (i > 0) {
-            break;
-          }
-        }
-        document.getElementById("streakCount").textContent = `${streak} days`;
-
-        // Find best mood day this week
-        const weekAgo = new Date(today);
-        weekAgo.setDate(today.getDate() - 7);
-        const thisWeekMoods = moods.filter(
-          (mood) => new Date(mood.date) >= weekAgo
-        );
-
-        if (thisWeekMoods.length > 0) {
-          const groupedByDay = {};
-
-          thisWeekMoods.forEach((mood) => {
-            const dateKey = new Date(mood.date).toDateString();
-            if (!groupedByDay[dateKey]) {
-              groupedByDay[dateKey] = [];
-            }
-            groupedByDay[dateKey].push(mood.moodScore);
-          });
-
-          let bestDay = "";
-          let highestAvg = -Infinity;
-
-          Object.entries(groupedByDay).forEach(([day, scores]) => {
-            const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
-            if (avg > highestAvg) {
-              highestAvg = avg;
-              bestDay = new Date(day).toLocaleDateString("en-US", {
-                weekday: "short",
-                month: "short",
-                day: "numeric",
-              });
-            }
-          });
-
-          document.getElementById("bestMoodDay").textContent = bestDay;
-        } else {
-          document.getElementById("bestMoodDay").textContent = "No data";
-        }
-
-        // Update trend indicator
-        if (moods.length >= 7) {
-          const recentMoods = moods.slice(0, 7);
-          const olderMoods = moods.slice(7, 14);
-
-          if (olderMoods.length > 0) {
-            const recentAvg =
-              recentMoods.reduce((sum, m) => sum + m.moodScore, 0) /
-              recentMoods.length;
-            const olderAvg =
-              olderMoods.reduce((sum, m) => sum + m.moodScore, 0) /
-              olderMoods.length;
-
-            const trend = recentAvg - olderAvg;
-            const trendElement = document.getElementById("trendIndicator");
-
-            if (trend > 0.5) {
-              trendElement.textContent = "Improving";
-              trendElement.className = "text-2xl font-bold text-green-300";
-            } else if (trend < -0.5) {
-              trendElement.textContent = "Declining";
-              trendElement.className = "text-2xl font-bold text-red-300";
-            } else {
-              trendElement.textContent = "Stable";
-              trendElement.className = "text-2xl font-bold text-blue-300";
-            }
-          }
-        }
-      }
-
-      // Enhanced chart drawing
-      function drawChart(moods) {
-        const canvas = document.getElementById("moodChart");
-        const ctx = canvas.getContext("2d");
-
-        // Destroy existing chart if it exists
-        if (moodChart) {
-          moodChart.destroy();
-        }
-
-        if (moods.length === 0) {
-          // Show empty state
-          ctx.fillStyle = "#6B7280";
-          ctx.font = "16px system-ui";
-          ctx.textAlign = "center";
-          ctx.fillText(
-            "No data to display",
-            canvas.width / 2,
-            canvas.height / 2
-          );
-          return;
-        }
-
-        // Prepare data for last 7 days
-        const last7Days = [];
-        const today = new Date();
-
-        for (let i = 6; i >= 0; i--) {
-          const date = new Date(today);
-          date.setDate(today.getDate() - i);
-          last7Days.push(date);
-        }
-
-        const chartData = last7Days.map((date) => {
-          const dayMoods = moods.filter((mood) => {
-            const moodDate = new Date(mood.date);
-            return moodDate.toDateString() === date.toDateString();
-          });
-
-          if (dayMoods.length === 0) return null;
-
-          const avgMood =
-            dayMoods.reduce((sum, mood) => sum + mood.moodScore, 0) /
-            dayMoods.length;
-          return avgMood;
-        });
-
-        const labels = last7Days.map((date) =>
-          date.toLocaleDateString("en-US", {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-          })
-        );
-
-        moodChart = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: "Average Mood",
-                data: chartData,
-                borderColor: "rgb(59, 130, 246)",
-                backgroundColor: "rgba(59, 130, 246, 0.1)",
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4,
-                pointBackgroundColor: "rgb(59, 130, 246)",
-                pointBorderColor: "rgb(255, 255, 255)",
-                pointBorderWidth: 2,
-                pointRadius: 6,
-                pointHoverRadius: 8,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: false,
-              },
-            },
-            scales: {
-              y: {
-                beginAtZero: false,
-                min: -5,
-                max: 5,
-                ticks: {
-                  color: "rgb(156, 163, 175)",
-                  callback: function (value) {
-                    return value > 0 ? `+${value}` : value;
-                  },
-                },
-                grid: {
-                  color: "rgba(156, 163, 175, 0.1)",
-                },
-              },
-              x: {
-                ticks: {
-                  color: "rgb(156, 163, 175)",
-                },
-                grid: {
-                  color: "rgba(156, 163, 175, 0.1)",
-                },
-              },
-            },
-            elements: {
-              point: {
-                hoverBorderWidth: 3,
-              },
-            },
-          },
-        });
-      }
-      function initDashboard() {
-        if (!checkAuth()) {
-          return;
-        }
-
-        fetchDailyCount();
-        fetchMoods();
-      }
-      document.addEventListener("DOMContentLoaded", initDashboard);
-    </script>
+    <script src="dashboard.js"></script>
   </body>
 </html>
