@@ -8,7 +8,7 @@
     <script src="login.js"></script>
   </head>
   <body
-    class="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-gray-900 dark:via-blue-900 dark:to-gray-900 transition-all duration-1000"
+    class="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 transition-all duration-1000"
   >
     <!-- Animated Background Elements -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
@@ -25,33 +25,10 @@
       ></div>
     </div>
 
-    <!-- Dark Mode Toggle -->
-    <div class="fixed top-6 right-6 z-50">
-      <button
-        id="darkModeToggle"
-        class="relative p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 group"
-      >
-        <div class="w-6 h-6 relative">
-          <div
-            id="sunIcon"
-            class="absolute inset-0 text-yellow-400 transition-all duration-300 transform rotate-0 scale-100"
-          >
-            ☀️
-          </div>
-          <div
-            id="moonIcon"
-            class="absolute inset-0 text-blue-300 transition-all duration-300 transform rotate-180 scale-0"
-          >
-            🌙
-          </div>
-        </div>
-      </button>
-    </div>
-
     <div class="relative w-full max-w-md animate-slideInUp">
       <!-- Glassmorphism Container -->
       <div
-        class="bg-white/10 dark:bg-gray-800/30 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 rounded-3xl shadow-2xl p-8 relative overflow-hidden"
+        class="bg-gray-800/30 backdrop-blur-xl border border-gray-700/50 rounded-3xl shadow-2xl p-8 relative overflow-hidden"
       >
         <!-- Gradient Border Effect -->
         <div
@@ -73,7 +50,7 @@
               >
                 Mood Tracker
               </h2>
-              <p class="text-gray-300 dark:text-gray-400">
+              <p class="text-gray-400">
                 Track your emotions, improve your wellbeing
               </p>
             </div>
@@ -87,7 +64,7 @@
             <form id="loginFormElement" class="space-y-6">
               <div class="group">
                 <label
-                  class="block mb-2 font-medium text-gray-200 dark:text-gray-300 transition-colors duration-300"
+                  class="block mb-2 font-medium text-gray-300 transition-colors duration-300"
                 >
                   Email
                 </label>
@@ -96,7 +73,7 @@
                     id="loginEmail"
                     type="email"
                     placeholder="you@example.com"
-                    class="w-full p-4 rounded-2xl bg-white/10 dark:bg-gray-700/50 text-white placeholder-gray-400 border border-white/20 dark:border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 hover:bg-white/15 dark:hover:bg-gray-700/70"
+                    class="w-full p-4 rounded-2xl bg-gray-700/50 text-white placeholder-gray-400 border border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 hover:bg-gray-700/70"
                     required
                   />
                   <div
@@ -107,7 +84,7 @@
 
               <div class="group">
                 <label
-                  class="block mb-2 font-medium text-gray-200 dark:text-gray-300 transition-colors duration-300"
+                  class="block mb-2 font-medium text-gray-300 transition-colors duration-300"
                 >
                   Password
                 </label>
@@ -115,7 +92,7 @@
                   <input
                     id="loginPassword"
                     type="password"
-                    class="w-full p-4 pr-12 rounded-2xl bg-white/10 dark:bg-gray-700/50 text-white placeholder-gray-400 border border-white/20 dark:border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 hover:bg-white/15 dark:hover:bg-gray-700/70"
+                    class="w-full p-4 pr-12 rounded-2xl bg-gray-700/50 text-white placeholder-gray-400 border border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 hover:bg-gray-700/70"
                     required
                   />
                   <button
@@ -147,7 +124,7 @@
             </form>
 
             <div class="mt-8 text-center">
-              <p class="text-gray-300 dark:text-gray-400">
+              <p class="text-gray-400">
                 Don't have an account?
                 <button
                   id="showSignup"
@@ -173,9 +150,7 @@
               >
                 Create Account
               </h2>
-              <p class="text-gray-300 dark:text-gray-400">
-                Join thousands tracking their mood
-              </p>
+              <p class="text-gray-400">Join thousands tracking their mood</p>
             </div>
 
             <!-- Alert -->
@@ -186,16 +161,13 @@
 
             <form id="signupFormElement" class="space-y-6">
               <div class="group">
-                <label
-                  class="block mb-2 font-medium text-gray-200 dark:text-gray-300"
-                  >Name</label
-                >
+                <label class="block mb-2 font-medium text-gray-300">Name</label>
                 <div class="relative">
                   <input
                     id="signupName"
                     type="text"
                     placeholder="Your name"
-                    class="w-full p-4 rounded-2xl bg-white/10 dark:bg-gray-700/50 text-white placeholder-gray-400 border border-white/20 dark:border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300 hover:bg-white/15 dark:hover:bg-gray-700/70"
+                    class="w-full p-4 rounded-2xl bg-gray-700/50 text-white placeholder-gray-400 border border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300 hover:bg-gray-700/70"
                     required
                   />
                   <div
@@ -205,8 +177,7 @@
               </div>
 
               <div class="group">
-                <label
-                  class="block mb-2 font-medium text-gray-200 dark:text-gray-300"
+                <label class="block mb-2 font-medium text-gray-300"
                   >Email</label
                 >
                 <div class="relative">
@@ -214,7 +185,7 @@
                     id="signupEmail"
                     type="email"
                     placeholder="you@example.com"
-                    class="w-full p-4 rounded-2xl bg-white/10 dark:bg-gray-700/50 text-white placeholder-gray-400 border border-white/20 dark:border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300 hover:bg-white/15 dark:hover:bg-gray-700/70"
+                    class="w-full p-4 rounded-2xl bg-gray-700/50 text-white placeholder-gray-400 border border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300 hover:bg-gray-700/70"
                     required
                   />
                   <div
@@ -224,8 +195,7 @@
               </div>
 
               <div class="group">
-                <label
-                  class="block mb-2 font-medium text-gray-200 dark:text-gray-300"
+                <label class="block mb-2 font-medium text-gray-300"
                   >Password</label
                 >
                 <div class="relative">
@@ -233,7 +203,7 @@
                     id="signupPassword"
                     type="password"
                     placeholder="At least 6 characters"
-                    class="w-full p-4 pr-12 rounded-2xl bg-white/10 dark:bg-gray-700/50 text-white placeholder-gray-400 border border-white/20 dark:border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300 hover:bg-white/15 dark:hover:bg-gray-700/70"
+                    class="w-full p-4 pr-12 rounded-2xl bg-gray-700/50 text-white placeholder-gray-400 border border-gray-600/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300 hover:bg-gray-700/70"
                     required
                   />
                   <button
@@ -268,7 +238,7 @@
             </form>
 
             <div class="mt-8 text-center">
-              <p class="text-gray-300 dark:text-gray-400">
+              <p class="text-gray-400">
                 Already have an account?
                 <button
                   id="showLogin"

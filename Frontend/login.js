@@ -85,55 +85,18 @@ function checkAuthStatus() {
 // DARK MODE FUNCTIONALITY
 
 /**
- * Initialize dark mode based on user preference or system setting
+ * Initialize and enforce dark mode permanently
  */
 function initDarkMode() {
-  const savedTheme = localStorage.getItem("theme");
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-  if (savedTheme === "light" || (!savedTheme && !prefersDark)) {
-    document.documentElement.classList.remove("dark");
-    updateDarkModeToggle(false);
-  } else {
-    document.documentElement.classList.add("dark");
-    updateDarkModeToggle(true);
-  }
-}
-
-/**
- * Update dark mode toggle button visual state
- * @param {boolean} isDark - Whether dark mode is active
- */
-function updateDarkModeToggle(isDark) {
-  const sunIcon = document.getElementById("sunIcon");
-  const moonIcon = document.getElementById("moonIcon");
-
-  if (isDark) {
-    sunIcon.className =
-      "absolute inset-0 text-yellow-400 transition-all duration-300 transform rotate-180 scale-0";
-    moonIcon.className =
-      "absolute inset-0 text-blue-300 transition-all duration-300 transform rotate-0 scale-100";
-  } else {
-    sunIcon.className =
-      "absolute inset-0 text-yellow-400 transition-all duration-300 transform rotate-0 scale-100";
-    moonIcon.className =
-      "absolute inset-0 text-blue-300 transition-all duration-300 transform rotate-180 scale-0";
-  }
+  // Always enable dark mode
+  document.documentElement.classList.add("dark");
+  // Remove any light mode preference from localStorage
+  localStorage.setItem("theme", "dark");
 }
 
 // EVENT LISTENERS SETUP
 
 function setupEventListeners() {
-  // Dark mode toggle
-  const darkModeToggle = document.getElementById("darkModeToggle");
-  if (darkModeToggle) {
-    darkModeToggle.addEventListener("click", () => {
-      const isDark = document.documentElement.classList.toggle("dark");
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-      updateDarkModeToggle(isDark);
-    });
-  }
-
   // Form switching
   const showSignupBtn = document.getElementById("showSignup");
   const showLoginBtn = document.getElementById("showLogin");
