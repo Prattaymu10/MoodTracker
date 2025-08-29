@@ -66,12 +66,10 @@ tailwind.config = {
   },
 };
 
-
 // GLOBAL VARIABLES
 
 let moodChart = null; // Chart.js instance
-const API_BASE_URL = "http://localhost:5000/api";
-
+const API_BASE_URL = "https://moodtracker-backend-0o3c.onrender.com/api";
 
 // AUTHENTICATION MANAGEMENT
 
@@ -105,7 +103,6 @@ function logout() {
     window.location.href = "login.html";
   }, 1000);
 }
-
 
 // MOOD UTILITIES
 
@@ -173,7 +170,6 @@ const tips = [
   "Read an inspiring quote or watch a motivational video.",
 ];
 
-
 //Update the tip of the day with a random wellness tip
 
 function updateTip() {
@@ -183,7 +179,6 @@ function updateTip() {
     tipElement.textContent = randomTip;
   }
 }
-
 
 // DATE & TIME MANAGEMENT
 
@@ -214,7 +209,6 @@ function updateDateTime() {
     `;
   }
 }
-
 
 // DAILY COUNT MANAGEMENT
 
@@ -287,7 +281,6 @@ async function fetchDailyCount() {
     showNotification("Failed to load daily progress", "error");
   }
 }
-
 
 // MOOD SAVING
 
@@ -386,7 +379,6 @@ async function saveMood() {
   }
 }
 
-
 // NOTIFICATION SYSTEM
 
 /**
@@ -428,7 +420,6 @@ function showNotification(message, type = "info") {
   }, 5000);
 }
 
-
 // MOOD DATA FETCHING
 
 async function fetchMoods() {
@@ -459,7 +450,6 @@ async function fetchMoods() {
     showNotification("Failed to connect to server", "error");
   }
 }
-
 
 // MOOD TABLE RENDERING
 
@@ -536,7 +526,6 @@ function updateMoodTable(moods) {
 function viewMoodDetails(entryId) {
   showNotification("Mood details feature coming soon!", "info");
 }
-
 
 // MOOD STATISTICS
 
@@ -726,7 +715,6 @@ function calculateTrend(moods) {
   }
 }
 
-
 // CHART RENDERING
 
 /**
@@ -863,7 +851,6 @@ function drawChart(moods) {
     },
   });
 }
-
 
 // INITIALIZATION
 
