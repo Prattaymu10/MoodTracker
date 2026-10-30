@@ -2,6 +2,8 @@
 
 A full-stack web app to log your emotions with emojis, see your 7-day mood trend, and spot patterns over time.
 
+🌐 **Live Demo:** https://mood-s5un.vercel.app/
+
 ## ✨ Features
 
 - 🔐 **Auth** – Signup/login with bcrypt-hashed passwords and JWT (1-day expiry)
@@ -13,17 +15,17 @@ A full-stack web app to log your emotions with emojis, see your 7-day mood trend
 
 ## 🛠 Tech Stack
 
-| Layer    | Tech                                           |
-| -------- | ---------------------------------------------- |
+| Layer | Tech |
+|---|---|
 | Frontend | HTML, Tailwind CSS (CDN), Vanilla JS, Chart.js |
-| Backend  | Node.js, Express                               |
-| Database | MongoDB + Mongoose                             |
-| Auth     | JWT, bcryptjs                                  |
-| Hosting  | Render (backend)                               |
+| Backend | Node.js, Express |
+| Database | MongoDB + Mongoose |
+| Auth | JWT, bcryptjs |
+| Hosting | Vercel (frontend), Render (backend) |
 
 ## 📁 Structure
 
-```
+```text
 ├── backend
 │   ├── controllers/   authController.js, moodController.js
 │   └── models/        User.js, Mood.js
@@ -34,13 +36,13 @@ A full-stack web app to log your emotions with emojis, see your 7-day mood trend
 
 ## 🔌 API Endpoints
 
-| Method | Endpoint                | Auth | Description                          |
-| ------ | ----------------------- | ---- | ------------------------------------ |
-| POST   | `/api/auth/signup`      | ❌   | Register a new user                  |
-| POST   | `/api/auth/login`       | ❌   | Login, returns JWT                   |
-| POST   | `/api/moods`            | ✅   | Add a mood entry                     |
-| GET    | `/api/moods`            | ✅   | Last 10 moods + 7-day chart data     |
-| GET    | `/api/moods/daily-count`| ✅   | Today's entry count and remaining    |
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/api/auth/signup` | ❌ | Register a new user |
+| POST | `/api/auth/login` | ❌ | Login, returns JWT |
+| POST | `/api/moods` | ✅ | Add a mood entry |
+| GET | `/api/moods` | ✅ | Last 10 moods + 7-day chart data |
+| GET | `/api/moods/daily-count` | ✅ | Today's entry count and remaining |
 
 Protected routes expect `Authorization: Bearer <token>`.
 
@@ -50,10 +52,12 @@ Protected routes expect `Authorization: Bearer <token>`.
 # Backend
 cd backend
 npm install
-# create .env with:
-# MONGO_URI=your_mongodb_uri
-# JWT_SECRET=your_secret
-# PORT=5000
+
+# Create a .env file with:
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_secret
+PORT=5000
+
 npm start
 ```
 
@@ -68,4 +72,3 @@ Then set `API_BASE_URL` in `login.js` and `dashboard.js` to `http://localhost:50
 ## 👤 Author
 
 **Prattay** – CSE graduate, Metropolitan University, Sylhet
-
