@@ -2,7 +2,8 @@
 
 A full-stack web app to log your emotions with emojis, see your 7-day mood trend, and spot patterns over time.
 
-🌐 **Live Demo:** https://mood-s5un.vercel.app/
+🌐 **Live Demo:** https://mood-s5un.vercel.app
+
 
 ## ✨ Features
 
